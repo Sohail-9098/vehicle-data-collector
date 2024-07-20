@@ -22,19 +22,34 @@ type MQTTConfig struct {
 }
 
 func NewMQTTConfig() (*MQTTConfig, error) {
-	return loadMQTTConfig()
+	return loadMQTTConfig(CONFIG_FILE_PATH)
 }
 
-func loadMQTTConfig() (*MQTTConfig, error) {
-	bytes, err := os.ReadFile(CONFIG_FILE_PATH)
+func loadMQTTConfig(filepath string) (*MQTTConfig, error) {
+	var mqttConfig *MQTTConfig
+	bytes, err := readMQTTConfigFile(filepath)
 	if err != nil {
-		errStr := fmt.Sprintf("failed to open MQTT config file: %v", err)
+		return nil, err
+	}
+	if err := decodeMQTTConfig(bytes, &mqttConfig); err != nil {
+		return nil, err
+	}
+	return mqttConfig, nil
+}
+
+func readMQTTConfigFile(filepath string) ([]byte, error) {
+	bytes, err := os.ReadFile(filepath)
+	if err != nil {
+		errStr := fmt.Sprintf("failed to read MQTT config file: %v", err)
 		return nil, errors.New(errStr)
 	}
-	var config *MQTTConfig
-	if err := yaml.Unmarshal(bytes, &config); err != nil {
-		str := fmt.Sprintf("failed to read MQTT config file: %v", err)
-		return nil, errors.New(str)
+	return bytes, nil
+}
+
+func decodeMQTTConfig(bytes []byte, mqttConfig **MQTTConfig) error {
+	if err := yaml.Unmarshal(bytes, &mqttConfig); err != nil {
+		str := fmt.Sprintf("failed to decode MQTT config file: %v", err)
+		return errors.New(str)
 	}
-	return config, nil
+	return nil
 }

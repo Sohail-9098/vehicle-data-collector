@@ -1,0 +1,5 @@
+mqtt:
+  broker: "tcp://localhost:1883"
+  client_id: "vehicle_data_collector"
+  username: ""
+  password: ""

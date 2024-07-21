@@ -5,6 +5,7 @@ go 1.22.5
 require (
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/stretchr/testify v1.9.0
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/yaml.v3 v3.0.1
 )
 

@@ -33,3 +33,10 @@ func (c *Client) Disconnect() {
 	c.client.Disconnect(250)
 	log.Println("MQTT client disconnected")
 }
+
+func (c *Client) Subscribe(topic string, qos byte, messageHandler func(client MQTT.Client, message MQTT.Message)) error {
+	if token := c.client.Subscribe(topic, qos, messageHandler); token.Wait() && token.Error() != nil {
+		return token.Error()
+	}
+	return nil
+}

@@ -18,7 +18,7 @@ type Telemetry struct {
 	dataCh chan *vehicle.Telemetry
 }
 
-func NewTelemetryData() *Telemetry {
+func NewTelemetry() *Telemetry {
 	return &Telemetry{
 		dataCh: make(chan *vehicle.Telemetry, 100),
 	}

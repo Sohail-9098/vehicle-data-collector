@@ -1,7 +1,7 @@
 package telemetry
 
 import (
-	"fmt"
+	"context"
 	"log"
 	"sync"
 
@@ -9,6 +9,8 @@ import (
 	"github.com/Sohail-9098/vehicle-data-collector/internal/mqtt"
 	"github.com/Sohail-9098/vehicle-data-collector/internal/protobufs/vehicle"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -53,6 +55,19 @@ func (t *Telemetry) messageHandler(c MQTT.Client, m MQTT.Message) {
 func (t *Telemetry) processTelemetryData(wg *sync.WaitGroup) {
 	defer wg.Done()
 	for data := range t.dataCh {
-		fmt.Println(data)
+		go t.sendToDataProcessingService(data)
+	}
+}
+
+func (t *Telemetry) sendToDataProcessingService(data *vehicle.Telemetry) {
+	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("failed to connect: %v", err)
+	}
+	defer conn.Close()
+
+	client := vehicle.NewDataProcessingServiceClient(conn)
+	if _, err := client.ProcessTelemetryData(context.Background(), data); err != nil {
+		log.Fatalf("failed to send: %v", err)
 	}
 }

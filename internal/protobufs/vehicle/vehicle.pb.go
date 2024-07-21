@@ -108,6 +108,44 @@ func (x *Telemetry) GetFuelLevel() float64 {
 	return 0
 }
 
+type Empty struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Empty) Reset() {
+	*x = Empty{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_protobufs_vehicle_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Empty) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Empty) ProtoMessage() {}
+
+func (x *Empty) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_protobufs_vehicle_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Empty.ProtoReflect.Descriptor instead.
+func (*Empty) Descriptor() ([]byte, []int) {
+	return file_internal_protobufs_vehicle_proto_rawDescGZIP(), []int{1}
+}
+
 var File_internal_protobufs_vehicle_proto protoreflect.FileDescriptor
 
 var file_internal_protobufs_vehicle_proto_rawDesc = []byte{
@@ -129,9 +167,15 @@ var file_internal_protobufs_vehicle_proto_rawDesc = []byte{
 	0x05, 0x73, 0x70, 0x65, 0x65, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x73, 0x70,
 	0x65, 0x65, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x66, 0x75, 0x65, 0x6c, 0x5f, 0x6c, 0x65, 0x76, 0x65,
 	0x6c, 0x18, 0x06, 0x20, 0x01, 0x28, 0x01, 0x52, 0x09, 0x66, 0x75, 0x65, 0x6c, 0x4c, 0x65, 0x76,
-	0x65, 0x6c, 0x42, 0x1c, 0x5a, 0x1a, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x73, 0x2f, 0x76, 0x65, 0x68, 0x69, 0x63, 0x6c, 0x65,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x6c, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x32, 0x53, 0x0a, 0x15, 0x44,
+	0x61, 0x74, 0x61, 0x50, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x69, 0x6e, 0x67, 0x53, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x12, 0x3a, 0x0a, 0x14, 0x50, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x54,
+	0x65, 0x6c, 0x65, 0x6d, 0x65, 0x74, 0x72, 0x79, 0x44, 0x61, 0x74, 0x61, 0x12, 0x12, 0x2e, 0x76,
+	0x65, 0x68, 0x69, 0x63, 0x6c, 0x65, 0x2e, 0x54, 0x65, 0x6c, 0x65, 0x6d, 0x65, 0x74, 0x72, 0x79,
+	0x1a, 0x0e, 0x2e, 0x76, 0x65, 0x68, 0x69, 0x63, 0x6c, 0x65, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x42, 0x1c, 0x5a, 0x1a, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x62, 0x75, 0x66, 0x73, 0x2f, 0x76, 0x65, 0x68, 0x69, 0x63, 0x6c, 0x65, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -146,15 +190,18 @@ func file_internal_protobufs_vehicle_proto_rawDescGZIP() []byte {
 	return file_internal_protobufs_vehicle_proto_rawDescData
 }
 
-var file_internal_protobufs_vehicle_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_internal_protobufs_vehicle_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_internal_protobufs_vehicle_proto_goTypes = []any{
 	(*Telemetry)(nil),             // 0: vehicle.Telemetry
-	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
+	(*Empty)(nil),                 // 1: vehicle.Empty
+	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
 }
 var file_internal_protobufs_vehicle_proto_depIdxs = []int32{
-	1, // 0: vehicle.Telemetry.timestamp:type_name -> google.protobuf.Timestamp
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
+	2, // 0: vehicle.Telemetry.timestamp:type_name -> google.protobuf.Timestamp
+	0, // 1: vehicle.DataProcessingService.ProcessTelemetryData:input_type -> vehicle.Telemetry
+	1, // 2: vehicle.DataProcessingService.ProcessTelemetryData:output_type -> vehicle.Empty
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -178,6 +225,18 @@ func file_internal_protobufs_vehicle_proto_init() {
 				return nil
 			}
 		}
+		file_internal_protobufs_vehicle_proto_msgTypes[1].Exporter = func(v any, i int) any {
+			switch v := v.(*Empty); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -185,9 +244,9 @@ func file_internal_protobufs_vehicle_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_internal_protobufs_vehicle_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   0,
+			NumServices:   1,
 		},
 		GoTypes:           file_internal_protobufs_vehicle_proto_goTypes,
 		DependencyIndexes: file_internal_protobufs_vehicle_proto_depIdxs,

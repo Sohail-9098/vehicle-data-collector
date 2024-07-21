@@ -14,3 +14,9 @@ message Telemetry {
     double speed = 5;
     double fuel_level = 6;
 }
+
+message Empty {}
+
+service DataProcessingService {
+    rpc ProcessTelemetryData (Telemetry) returns (Empty);
+}

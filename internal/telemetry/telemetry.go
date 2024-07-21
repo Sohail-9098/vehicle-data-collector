@@ -1,7 +1,9 @@
 package telemetry
 
 import (
+	"fmt"
 	"log"
+	"sync"
 
 	"github.com/Sohail-9098/vehicle-data-collector/internal/config"
 	"github.com/Sohail-9098/vehicle-data-collector/internal/mqtt"
@@ -11,14 +13,16 @@ import (
 )
 
 type Telemetry struct {
-	Data []*vehicle.Telemetry
+	dataCh chan *vehicle.Telemetry
 }
 
 func NewTelemetryData() *Telemetry {
-	return &Telemetry{}
+	return &Telemetry{
+		dataCh: make(chan *vehicle.Telemetry, 100),
+	}
 }
 
-func (t *Telemetry) FetchTelemetryData() {
+func (t *Telemetry) FetchAndProcessTelemetryData() {
 	mqttConfig, err := config.NewMQTTConfig()
 	if err != nil {
 		log.Fatalf("failed to read config file: %v", err)
@@ -30,13 +34,25 @@ func (t *Telemetry) FetchTelemetryData() {
 	if err := client.Subscribe("vehicles/#", 0, t.messageHandler); err != nil {
 		log.Fatalf("failed to subscribe: %v", err)
 	}
-	select {}
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go t.processTelemetryData(&wg)
+	wg.Wait()
 }
 
 func (t *Telemetry) messageHandler(c MQTT.Client, m MQTT.Message) {
-	telemetry := vehicle.Telemetry{}
-	if err := proto.Unmarshal(m.Payload(), &telemetry); err != nil {
-		log.Printf("failed to read telemetry data: %v\n", err)
+	go func() {
+		telemetry := vehicle.Telemetry{}
+		if err := proto.Unmarshal(m.Payload(), &telemetry); err != nil {
+			log.Printf("failed to read telemetry data: %v\n", err)
+		}
+		t.dataCh <- &telemetry
+	}()
+}
+
+func (t *Telemetry) processTelemetryData(wg *sync.WaitGroup) {
+	defer wg.Done()
+	for data := range t.dataCh {
+		fmt.Println(data)
 	}
-	t.Data = append(t.Data, &telemetry)
 }

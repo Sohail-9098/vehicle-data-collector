@@ -60,7 +60,7 @@ func (t *Telemetry) processTelemetryData(wg *sync.WaitGroup) {
 }
 
 func (t *Telemetry) sendToDataProcessingService(data *vehicle.Telemetry) {
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("localhost:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("failed to connect: %v", err)
 	}

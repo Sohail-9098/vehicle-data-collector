@@ -1,10 +1,14 @@
 package config
 
 import (
+	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"gopkg.in/yaml.v3"
 )
 
@@ -14,11 +18,44 @@ const (
 
 type MQTTConfig struct {
 	MQTT struct {
-		Broker   string `yaml:"broker"`
-		ClientID string `yaml:"client_id"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	} `yaml:"mqtt"`
+		Broker   string `json:"broker"`
+		ClientID string `json:"client_id"`
+		Username string `json:"username"`
+		Password string `json:"password"`
+	} `json:"mqtt"`
+}
+
+func New() (*MQTTConfig, error) {
+	config := &MQTTConfig{}
+	configStr, err := getSecretValue("vehicle/vehicle-data-collector/mqtt/credentials")
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal([]byte(configStr), &config.MQTT); err != nil {
+		return nil, errors.New("failed to decode config JSON")
+	}
+	config.MQTT.Broker = "tcp://localhost:1883"
+	return config, nil
+}
+
+func getSecretValue(secretName string) (string, error) {
+	// load aws config
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		errStr := fmt.Sprintf("failed to load config: %v", err)
+		return "", errors.New(errStr)
+	}
+
+	// load 'secretsmanager' service with help of config
+	svc := secretsmanager.NewFromConfig(cfg)
+	resp, err := svc.GetSecretValue(context.TODO(), &secretsmanager.GetSecretValueInput{
+		SecretId: &secretName,
+	})
+	if err != nil {
+		errStr := fmt.Sprintf("failed to get secret value: %v", err)
+		return "", errors.New(errStr)
+	}
+	return *resp.SecretString, nil
 }
 
 func NewMQTTConfig() (*MQTTConfig, error) {

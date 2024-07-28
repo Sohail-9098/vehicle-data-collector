@@ -25,7 +25,7 @@ func NewTelemetry() *Telemetry {
 }
 
 func (t *Telemetry) FetchAndProcessTelemetryData() {
-	mqttConfig, err := config.NewMQTTConfig()
+	mqttConfig, err := config.New()
 	if err != nil {
 		log.Fatalf("failed to read config file: %v", err)
 	}

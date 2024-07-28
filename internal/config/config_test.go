@@ -40,3 +40,15 @@ func TestConfig_DecodeMQTTConfig_Invalid(t *testing.T) {
 	err := decodeMQTTConfig([]byte{'x'}, &mqttConfig)
 	require.Error(t, err)
 }
+
+func TestConfig_GetSecret(t *testing.T) {
+	s, err := getSecretValue("vehicle/vehicle-data-collector/mqtt/credentials")
+	require.NoError(t, err)
+	require.Equal(t, s, `{"client_id":"vehicle_data_collector","username":"","password":""}`)
+}
+
+func TestConfig_New(t *testing.T) {
+	c, err := New()
+	require.NoError(t, err)
+	require.Equal(t, c.MQTT.ClientID, "vehicle_data_collector")
+}
